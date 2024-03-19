@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
-     * Handle user login.
+     * Autentica um usuário.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -41,5 +41,46 @@ class AuthController extends Controller
 
         // Retorna uma mensagem de erro se as credenciais forem inválidas
         return response()->json(['message' => 'Invalid login credentials'], 401);
+    }
+
+    /**
+     * Registra um novo usuário.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6',
+            ]);
+
+            $user = User::create([
+                'name' => $credentials['name'],
+                'email' => $credentials['email'],
+                'password' => Hash::make($credentials['password']),
+            ]);
+
+            $token = $user->createToken('auth-token')->plainTextToken;
+
+            return response()->json(['user' => $user, 'token' => $token], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+    }
+
+    /**
+     * Encerra a sessão do usuário autenticado.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Sessão encerrada com sucesso'], 200);
     }
 }
