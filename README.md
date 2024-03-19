@@ -37,6 +37,9 @@ Este é um projeto de exemplo para gerenciar agendamentos (schedules) utilizando
 6. Inicie o servidor local:
 `php artisan serve`
 
+## Documentação da API
+Você pode acessar o nosso swagger no link: `https://documenter.getpostman.com/view/31039731/2sA358c528`
+
 ## Testes Unitários
 
 O projeto inclui testes unitários para garantir que as funcionalidades estejam funcionando corretamente. Você pode executar os testes usando o comando `php artisan test`.
