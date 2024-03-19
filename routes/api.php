@@ -1,9 +1,20 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScheduleController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/**
- * Rotas da API para o módulo de agenda.
- */
-Route::apiResource('schedules', ScheduleController::class);
+
+// rotas liberadas (não precisa de login)
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+// retorna infos do perfil do usuário
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
+// rotas de schedules, que necessitam de login
+Route::apiResource('api/schedules', ScheduleController::class)
+    ->middleware('auth:sanctum');
+
