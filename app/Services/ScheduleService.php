@@ -70,7 +70,7 @@ class ScheduleService
      */
     public function filterSchedulesByDateRange($startDate, $endDate)
     {
-        return Schedule::filterByDateRange($startDate, $endDate)->get();
+        return Schedule::filterByDateRange($startDate, $endDate);
     }
 
     /**

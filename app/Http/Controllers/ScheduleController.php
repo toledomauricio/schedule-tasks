@@ -83,23 +83,24 @@ class ScheduleController extends Controller
         return response()->json(null, 204);
     }
 
-    /**
-     * Filtra os agendamentos por intervalo de datas.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function filterByDateRange(Request $request)
-    {
-        $request->validate([
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-        ]);
+{
+    $request->validate([
+        'start_date' => 'required|date_format:Y-m-d',
+        'end_date' => 'required|date_format:Y-m-d',
+    ]);
 
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
 
-        $schedules = $this->scheduleService->filterSchedulesByDateRange($startDate, $endDate);
-        return response()->json($schedules);
+
+    $schedules = $this->scheduleService->filterSchedulesByDateRange($startDate, $endDate);
+    
+    if ($schedules->isEmpty()) {
+        return response()->json(['message' => 'No schedules found for the specified date range.']);
     }
+
+    return response()->json($schedules);
+}
 }

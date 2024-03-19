@@ -36,8 +36,9 @@ class Schedule extends Model
      */
     public static function filterByDateRange($startDate, $endDate)
     {
-        return self::whereBetween('start_date', [$startDate, $endDate])
-            ->orWhereBetween('due_date', [$startDate, $endDate]);
+        return self::where('start_date', '<=', $startDate)
+            ->where('due_date', '>=', $endDate)
+            ->get();
     }
 
     /**

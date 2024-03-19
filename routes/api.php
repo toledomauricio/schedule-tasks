@@ -14,7 +14,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// rotas de schedules, que necessitam de login
-Route::apiResource('schedules', ScheduleController::class)
-    ->middleware('auth:sanctum');
+// Rotas de schedules, que necessitam de login
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/schedules/filter', [ScheduleController::class, 'filterByDateRange']);
+    Route::get('/schedules', [ScheduleController::class, 'index']);
+    Route::post('/schedules', [ScheduleController::class, 'store']);
+    Route::get('/schedules/{schedule}', [ScheduleController::class, 'show']);
+    Route::put('/schedules/{schedule}', [ScheduleController::class, 'update']);
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy']);
+});
+
+
 
